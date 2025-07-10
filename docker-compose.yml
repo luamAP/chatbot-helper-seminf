@@ -59,7 +59,8 @@ services:
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
       - QUEUE_BULL_REDIS_DB=2
-      - N8N_EDITOR_BASE_URL=https://${N8N_HOST}
+      - N8N_PATH=/n8n/
+      - N8N_EDITOR_BASE_URL=https://${N8N_HOST}/
       - WEBHOOK_URL=https://${N8N_HOST}/
       - GENERIC_TIMEZONE=America/Sao_Paulo
       - N8N_METRICS=true
@@ -84,11 +85,13 @@ services:
       retries: 3
 
   evolution-api:
-    image: atendai/evolution-api:v2.1.1
+    image: atendai/evolution-api:latest
     container_name: evolution_api
     environment:
       - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
       - SERVER_URL=https://${EVOLUTION_HOST}
+      - SERVER_PORT=443
+      - MANAGER_URL=https://${EVOLUTION_HOST}/manager
       - DEL_INSTANCE=false
       - DATABASE_ENABLED=true
       - DATABASE_PROVIDER=postgresql
@@ -107,7 +110,7 @@ services:
       - CACHE_REDIS_SAVE_INSTANCES=false
       - CACHE_LOCAL_ENABLED=false
       - RABBITMQ_ENABLED=false
-      - WEBHOOK_GLOBAL_URL=
+      - WEBHOOK_GLOBAL_URL=https://${EVOLUTION_HOST}
       - WEBHOOK_GLOBAL_ENABLED=false
       - WEBHOOK_GLOBAL_WEBHOOK_BY_EVENTS=false
       - CONFIG_SESSION_PHONE_CLIENT=Evolution API
@@ -120,11 +123,12 @@ services:
       - LOG_LEVEL=ERROR
       - LOG_COLOR=true
       - LOG_BAILEYS=error
+      - CONFIG_SESSION_PHONE_VERSION=2.3000.1024551647
     volumes:
       - evolution_data:/evolution/instances
       - evolution_data:/evolution/store
     ports:
-      - "8080:8080"
+      - "443:443"
     depends_on:
       postgres:
         condition: service_healthy
