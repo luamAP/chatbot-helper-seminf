@@ -70,6 +70,8 @@ services:
       - ./n8n/local-files:/files
     ports:
       - "5678:5678"
+    #expose:
+    #  - "5678"
     depends_on:
       postgres:
         condition: service_healthy
@@ -90,8 +92,7 @@ services:
     environment:
       - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
       - SERVER_URL=https://${EVOLUTION_HOST}
-      - SERVER_PORT=443
-      - MANAGER_URL=https://${EVOLUTION_HOST}/manager
+      #- MANAGER_URL=https://${EVOLUTION_HOST}/manager
       - DEL_INSTANCE=false
       - DATABASE_ENABLED=true
       - DATABASE_PROVIDER=postgresql
@@ -110,7 +111,7 @@ services:
       - CACHE_REDIS_SAVE_INSTANCES=false
       - CACHE_LOCAL_ENABLED=false
       - RABBITMQ_ENABLED=false
-      - WEBHOOK_GLOBAL_URL=https://${EVOLUTION_HOST}
+      - WEBHOOK_GLOBAL_URL=
       - WEBHOOK_GLOBAL_ENABLED=false
       - WEBHOOK_GLOBAL_WEBHOOK_BY_EVENTS=false
       - CONFIG_SESSION_PHONE_CLIENT=Evolution API
@@ -127,8 +128,10 @@ services:
     volumes:
       - evolution_data:/evolution/instances
       - evolution_data:/evolution/store
+    #expose:
+    #  - "443"
     ports:
-      - "443:443"
+      - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
