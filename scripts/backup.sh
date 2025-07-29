@@ -7,7 +7,7 @@
 set -e  # Parar execução em caso de erro
 
 # Configurações
-BACKUP_DIR="/home/ubuntu/backups"
+BACKUP_DIR="/home/ubuntu/chatbot/chatbot-helper-seminf/data"
 DATE=$(date +%Y%m%d_%H%M%S)
 RETENTION_DAYS=30
 

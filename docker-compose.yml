@@ -59,10 +59,11 @@ services:
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
       - QUEUE_BULL_REDIS_DB=2
-      - N8N_PATH=/n8n/
+      - N8N_PATH=/n8n
       - N8N_ALLOW_DEFAULT_ORIGIN=true
       - N8N_EDITOR_BASE_URL=https://${N8N_HOST}/
       - WEBHOOK_URL=https://${N8N_HOST}/
+      - N8N_EXPRESS_TRUST_PROXY=true
       - GENERIC_TIMEZONE=America/Sao_Paulo
       - N8N_METRICS=true
       - N8N_LOG_LEVEL=info
@@ -93,7 +94,7 @@ services:
     environment:
       - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
       - SERVER_URL=https://${EVOLUTION_HOST}
-      - MANAGER_URL=https://${EVOLUTION_HOST}/manager
+      - MANAGER_URL=https://${EVOLUTION_HOST}/manager/
       - DEL_INSTANCE=false
       - DATABASE_ENABLED=true
       - DATABASE_PROVIDER=postgresql
@@ -160,7 +161,7 @@ volumes:
 networks:
   chatbot-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+    #ipam:
+    #  config:
+    #    - subnet: 172.20.0.0/16
 
