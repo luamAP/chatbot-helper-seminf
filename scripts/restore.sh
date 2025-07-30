@@ -7,7 +7,7 @@
 set -e  # Parar execução em caso de erro
 
 # Configurações
-BACKUP_DIR="/home/ubuntu/chatbot/chatbot-helper-seminf/data"
+BACKUP_DIR="/home/ubuntu/chatbot-helper-seminf/data"
 
 # Cores para output
 RED='\033[0;31m'
