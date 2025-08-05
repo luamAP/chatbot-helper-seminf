@@ -62,7 +62,7 @@ services:
     image: n8nio/n8n:latest
     container_name: n8n
     environment:
-      - N8N_HOST=${N8N_HOST}
+      - N8N_HOST=n8n.${DOMAIN}
       - N8N_PORT=5678
       - N8N_PROTOCOL=${N8N_PROTOCOL}
       - N8N_BASIC_AUTH_ACTIVE=true
@@ -109,8 +109,7 @@ services:
     container_name: evolution_api
     environment:
       - AUTHENTICATION_API_KEY=${AUTHENTICATION_API_KEY}
-      - SERVER_URL=https://${EVOLUTION_HOST}
-      - MANAGER_URL=https://${EVOLUTION_HOST}/manager/
+      - SERVER_URL=https://evo.${DOMAIN}
       - DEL_INSTANCE=false
       - DATABASE_ENABLED=true
       - DATABASE_PROVIDER=postgresql
