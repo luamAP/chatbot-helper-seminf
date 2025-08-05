@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/html:/usr/share/nginx/html
+    depends_on:
+      - n8n
+      - evolution-api
+    restart: always
+    networks:
+      - chatbot-network
+
   postgres:
     image: postgres:13-alpine
     container_name: postgres
@@ -44,7 +62,7 @@ services:
     image: n8nio/n8n:latest
     container_name: n8n
     environment:
-      - N8N_HOST=luantohome.ddns.net
+      - N8N_HOST=${N8N_HOST}
       - N8N_PORT=5678
       - N8N_PROTOCOL=${N8N_PROTOCOL}
       - N8N_BASIC_AUTH_ACTIVE=true
@@ -59,7 +77,7 @@ services:
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
       - QUEUE_BULL_REDIS_DB=2
-      - N8N_PATH=/n8n
+      - N8N_PATH=/
       - N8N_ALLOW_DEFAULT_ORIGIN=true
       - N8N_EDITOR_BASE_URL=https://${N8N_HOST}/
       - WEBHOOK_URL=https://${N8N_HOST}/
@@ -70,10 +88,8 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
       - ./n8n/local-files:/files
-    ports:
-      - "5678:5678"
-    #expose:
-    #  - "5678"
+    expose:
+      - "5678"
     depends_on:
       postgres:
         condition: service_healthy
@@ -130,10 +146,8 @@ services:
     volumes:
       - evolution_data:/evolution/instances
       - evolution_data:/evolution/store
-    #expose:
-    #  - "443"
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -161,7 +175,3 @@ volumes:
 networks:
   chatbot-network:
     driver: bridge
-    #ipam:
-    #  config:
-    #    - subnet: 172.20.0.0/16
-
