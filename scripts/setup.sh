@@ -43,7 +43,7 @@ log "Iniciando configuração do ambiente..."
 source .env
 
 # Verificar variáveis obrigatórias
-required_vars=("N8N_HOST" "EVOLUTION_HOST" "POSTGRES_PASSWORD" "N8N_BASIC_AUTH_PASSWORD" "AUTHENTICATION_API_KEY")
+required_vars=("DOMAIN" "POSTGRES_PASSWORD" "N8N_BASIC_AUTH_PASSWORD" "AUTHENTICATION_API_KEY")
 for var in "${required_vars[@]}"; do
     if [ -z "${!var}" ]; then
         error "Variável $var não está definida no arquivo .env"
@@ -133,6 +133,13 @@ done
 # Verificar conectividade das portas
 log "Verificando conectividade das portas..."
 
+if curl -s http://localhost:80 >/dev/null 2>&1; then
+    log "✓ Site principal está acessível"
+else
+    warn "✗ Site principal não está acessível"
+    all_healthy=false
+fi
+
 if curl -s http://localhost:5678/healthz >/dev/null 2>&1; then
     log "✓ n8n está respondendo na porta 5678"
 else
@@ -150,8 +157,10 @@ fi
 log "Configuração concluída!"
 echo
 echo -e "${BLUE}=== INFORMAÇÕES DE ACESSO ===${NC}"
-echo -e "${GREEN}n8n:${NC} https://$N8N_HOST"
-echo -e "${GREEN}Evolution API:${NC} https://$EVOLUTION_HOST"
+echo -e "${GREEN}Site Principal:${NC} http://$DOMAIN"
+echo -e "${GREEN}n8n:${NC} http://n8n.$DOMAIN"
+echo -e "${GREEN}Evolution API:${NC} http://evo.$DOMAIN"
+echo -e "${GREEN}Evolution Manager:${NC} http://evo.$DOMAIN/manager"
 echo
 echo -e "${BLUE}=== CREDENCIAIS ===${NC}"
 echo -e "${GREEN}n8n usuário:${NC} $N8N_BASIC_AUTH_USER"
